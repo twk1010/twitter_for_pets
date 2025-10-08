@@ -52,45 +52,6 @@ pipeline {
                }
             }
         }
-        stage('Deploy') {
-            when {
-                tag "release-*"
-            }
-            steps {
-                sshagent(['key-06087a0873dcffa60']) { // Jenkins SSH credential ID
-                    sh '''
-                    ssh -o StrictHostKeyChecking=no ec2-user@18.141.12.169 << 'ENDSSH'
-
-                    # Set deployment directory
-                    DEPLOY_DIR=~/twitter_for_pets
-                    mkdir -p $DEPLOY_DIR
-                    cd $DEPLOY_DIR
-
-                    # Stop old server if running (don't fail if not running)
-                    pkill -f twitter_for_pets.py || true
-
-                    # Copy updated files from Jenkins workspace
-                    scp -o StrictHostKeyChecking=no USER@JENKINS_SERVER_IP:/path/to/workspace/twitter_for_pets.py .
-                    scp -o StrictHostKeyChecking=no USER@JENKINS_SERVER_IP:/path/to/workspace/requirements.txt .
-
-                    # Setup Python virtual environment
-                    if [ ! -d "venv" ]; then
-                        python3 -m venv venv
-                    fi
-
-                    # Activate venv and install requirements
-                    source venv/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
-
-                    # Run the server in the background
-                    nohup python twitter_for_pets.py > twitter_for_pets.log 2>&1 &
-
-                    ENDSSH
-                    '''
-                }
-            }
-        }
     }
 
     post {
@@ -103,6 +64,7 @@ pipeline {
         }
     }
 }
+
 
 
 
