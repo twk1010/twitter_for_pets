@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    tools {
+        python 'Python311'
+    }
     parameters {
         choice(name: 'BRANCH', choices: ['main', 'dev', 'bug_fixes'], description: 'Select branch to build')
     }
@@ -81,3 +83,4 @@ pipeline {
         }
     }
 }
+
