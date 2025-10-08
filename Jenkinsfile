@@ -53,7 +53,7 @@ pipeline {
             steps {
                 echo "Deploying to production..."
                 echo "Running deployment to production..."
-                sshagent (credentials: ['prod_ssh_key']) {
+                sshagent (credentials: ['jenkins-ssh-key']) {
                     bat '''
                     set "PROD_IP=<PROD_SERVER_IP>"
 
@@ -85,6 +85,7 @@ pipeline {
         }
     }
 }
+
 
 
 
