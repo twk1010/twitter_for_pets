@@ -54,14 +54,14 @@ pipeline {
                 dir('repo') {
                     withCredentials([
                         sshUserPrivateKey(
-                            credentialsId: 'jenkins-ssh-key',
+                            credentialsId: 'key-06087a0873dcffa60',
                             keyFileVariable: 'SSH_KEY',
                             usernameVariable: 'SSH_USER'
                         )
                     ]) {
                         bat '''
                         echo --- Starting Deployment ---
-                        set "SERVER_IP=<PROD_SERVER_IP>"
+                        set "SERVER_IP='18.141.12.169'"
                         set "SSH_CMD=ssh -i %SSH_KEY% -o StrictHostKeyChecking=no %SSH_USER%@%SERVER_IP%"
                         set "SCP_CMD=scp -i %SSH_KEY% -o StrictHostKeyChecking=no"
 
@@ -98,6 +98,7 @@ pipeline {
         }
     }
 }
+
 
 
 
