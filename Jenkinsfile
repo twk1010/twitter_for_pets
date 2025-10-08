@@ -21,7 +21,7 @@ pipeline {
                 python -m venv venv
                 call venv\\Scripts\\activate.bat
                 pip install --upgrade pip
-                pip install ruff mypy
+                pip install -r requirements.txt
                 '''
             }
         }
@@ -83,6 +83,7 @@ pipeline {
         }
     }
 }
+
 
 
 
