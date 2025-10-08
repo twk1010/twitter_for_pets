@@ -51,38 +51,37 @@ pipeline {
                 tag "release-*"
             }
             steps {
-                dir('repo') {
-                    withCredentials([
-                        sshUserPrivateKey(
-                            credentialsId: 'key-06087a0873dcffa60',
-                            keyFileVariable: 'SSH_KEY',
-                            usernameVariable: 'SSH_USER'
-                        )
-                    ]) {
-                        bat '''
-                        echo --- Starting Deployment ---
-                        set "SERVER_IP='18.141.12.169'"
-                        set "SSH_CMD=ssh -i %SSH_KEY% -o StrictHostKeyChecking=no %SSH_USER%@%SERVER_IP%"
-                        set "SCP_CMD=scp -i %SSH_KEY% -o StrictHostKeyChecking=no"
+                sshagent(['key-06087a0873dcffa60']) { // Jenkins SSH credential ID
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ec2-user@18.141.12.169 << 'ENDSSH'
 
-                        echo --- Killing any running twitter_for_pets.py ---
-                        %SSH_CMD% "pkill -f twitter_for_pets.py || true"
+                    # Set deployment directory
+                    DEPLOY_DIR=~/twitter_for_pets
+                    mkdir -p $DEPLOY_DIR
+                    cd $DEPLOY_DIR
 
-                        echo --- Copying updated source files ---
-                        %SCP_CMD% twitter_for_pets.py requirements.txt %SSH_USER%@%SERVER_IP%:~/twitter_for_pets/
+                    # Stop old server if running (don't fail if not running)
+                    pkill -f twitter_for_pets.py || true
 
-                        echo --- Creating venv if missing ---
-                        %SSH_CMD% "cd ~/twitter_for_pets && python3 -m venv venv || true"
+                    # Copy updated files from Jenkins workspace
+                    scp -o StrictHostKeyChecking=no USER@JENKINS_SERVER_IP:/path/to/workspace/twitter_for_pets.py .
+                    scp -o StrictHostKeyChecking=no USER@JENKINS_SERVER_IP:/path/to/workspace/requirements.txt .
 
-                        echo --- Installing dependencies ---
-                        %SSH_CMD% "cd ~/twitter_for_pets && ./venv/bin/pip install --upgrade pip && ./venv/bin/pip install -r requirements.txt"
+                    # Setup Python virtual environment
+                    if [ ! -d "venv" ]; then
+                        python3 -m venv venv
+                    fi
 
-                        echo --- Starting server in background ---
-                        %SSH_CMD% "cd ~/twitter_for_pets && nohup ./venv/bin/python twitter_for_pets.py > server.log 2>&1 &"
+                    # Activate venv and install requirements
+                    source venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
 
-                        echo --- Deployment complete ---
-                        '''
-                    }
+                    # Run the server in the background
+                    nohup python twitter_for_pets.py > twitter_for_pets.log 2>&1 &
+
+                    ENDSSH
+                    '''
                 }
             }
         }
@@ -98,6 +97,7 @@ pipeline {
         }
     }
 }
+
 
 
 
