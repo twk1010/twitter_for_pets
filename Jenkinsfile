@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    tools {
-        jenkins.plugins.shiningpanda.tools.PythonInstallation "Python311"
-    }
     parameters {
         choice(name: 'BRANCH', choices: ['main', 'dev', 'bug_fixes'], description: 'Select branch to build')
     }
@@ -86,6 +83,7 @@ pipeline {
         }
     }
 }
+
 
 
 
