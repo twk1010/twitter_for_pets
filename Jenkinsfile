@@ -14,8 +14,11 @@ pipeline {
                 echo "Checked out branch: ${params.BRANCH}"
             }
         }
-
+                  
         stage('Set up Python venv') {
+            environment {
+                PATH = "C:\Users\Tay Wen Kai\AppData\Local\Programs\Python\Python311;${env.PATH}"
+            }
             steps {
                 bat '''
                 python -m venv venv
@@ -83,6 +86,7 @@ pipeline {
         }
     }
 }
+
 
 
 
