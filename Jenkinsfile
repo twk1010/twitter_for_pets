@@ -47,7 +47,7 @@ pipeline {
 
         stage('Deploy') {
             when {
-                tag "release-*"
+                buildingTag()
             }
             steps {
                 echo "GIT_BRANCH = ${env.GIT_BRANCH}"
@@ -86,6 +86,7 @@ pipeline {
         }
     }
 }
+
 
 
 
