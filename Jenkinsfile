@@ -22,6 +22,7 @@ pipeline {
                 call venv\\Scripts\\activate.bat
                 pip install --upgrade pip
                 pip install -r requirements.txt
+                pip install ruff mypy types-Flask
                 '''
             }
         }
@@ -84,6 +85,7 @@ pipeline {
         }
     }
 }
+
 
 
 
