@@ -14,7 +14,7 @@ pipeline {
                   
         stage('Set up Python venv') {
             environment {
-                PATH = "C:\Users\Tay Wen Kai\AppData\Local\Programs\Python\Python311;${env.PATH}"
+                PATH = "C:\\Users\\Tay Wen Kai\\AppData\\Local\\Programs\\Python\\Python311;${env.PATH}"
             }
             steps {
                 bat '''
@@ -83,6 +83,7 @@ pipeline {
         }
     }
 }
+
 
 
 
