@@ -45,7 +45,13 @@ pipeline {
                 '''
             }
         }
-
+        stage('Test SSH') {
+                    steps {
+                        sshagent(['key-06087a0873dcffa60']) {
+                            sh 'ssh -o StrictHostKeyChecking=no ec2-user@18.141.12.169 "echo hello"'
+               }
+            }
+        }
         stage('Deploy') {
             when {
                 tag "release-*"
@@ -97,6 +103,7 @@ pipeline {
         }
     }
 }
+
 
 
 
