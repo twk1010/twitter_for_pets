@@ -54,7 +54,7 @@ pipeline {
                 dir('repo') {
                     withCredentials([
                         sshUserPrivateKey(
-                            credentialsId: 'prod_ssh_key',
+                            credentialsId: 'jenkins-ssh-key',
                             keyFileVariable: 'SSH_KEY',
                             usernameVariable: 'SSH_USER'
                         )
@@ -98,6 +98,7 @@ pipeline {
         }
     }
 }
+
 
 
 
