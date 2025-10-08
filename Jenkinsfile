@@ -47,11 +47,9 @@ pipeline {
 
         stage('Deploy') {
             when {
-                buildingTag()
+                tag "release-*"
             }
             steps {
-                echo "GIT_BRANCH = ${env.GIT_BRANCH}"
-                echo "GIT_TAG_NAME = ${env.GIT_TAG_NAME}"
                 echo "Deploying to production..."
                 echo "Running deployment to production..."
                 sshagent (credentials: ['prod_ssh_key']) {
