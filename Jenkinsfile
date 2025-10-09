@@ -45,7 +45,12 @@ pipeline {
                 '''
             }
         }
-
+        stage('Verify SSH') {
+            steps {
+                bat 'where ssh'
+                bat 'ssh -V'
+            }
+        }
         stage('Test SSH') {
             steps {
                 sshagent(credentials: ['ec2-user']) {
@@ -65,6 +70,7 @@ pipeline {
         }
     }
 }
+
 
 
 
