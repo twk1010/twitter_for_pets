@@ -48,7 +48,7 @@ pipeline {
         stage('Test SSH') {
             steps {
                 sshagent(credentials: ['ec2-user']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@18.141.24.7 "echo hello"'
+                    bat 'ssh -o StrictHostKeyChecking=no ec2-user@18.141.24.7 "echo hello"'
                }
             }
         }
@@ -64,6 +64,7 @@ pipeline {
         }
     }
 }
+
 
 
 
