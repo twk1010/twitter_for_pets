@@ -47,7 +47,7 @@ pipeline {
         }
         stage('Test SSH') {
             steps {
-                sshagent(credentials: ['ec2-user']) {
+                sshagent(['ec2-user']) {
                     bat '"C:\\WINDOWS\\System32\\OpenSSH\\ssh.exe" ec2-user@18.141.24.7 "echo Connected!"'
                 }
             }
@@ -64,6 +64,7 @@ pipeline {
         }
     }
 }
+
 
 
 
