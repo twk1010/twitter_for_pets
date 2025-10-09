@@ -48,12 +48,9 @@ pipeline {
 
         stage('Test SSH') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-user', keyFileVariable: 'KEY')]) {
-                    bat '''
-                        type %KEY%
-                        "C:\\Windows\\System32\\OpenSSH\\ssh.exe" -i %KEY% -o StrictHostKeyChecking=no ec2-user@18.141.24.7 "echo Connected!"
-                    '''
-               }
+                sshagent(credentials: ['ec2-user']) {
+                    bat 'ssh ec2-user@18.141.24.7 "echo Connected!"'
+                }
             }
         }
     }
@@ -68,6 +65,7 @@ pipeline {
         }
     }
 }
+
 
 
 
