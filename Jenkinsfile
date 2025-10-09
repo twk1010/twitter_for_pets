@@ -45,18 +45,13 @@ pipeline {
                 '''
             }
         }
-        stage('Check ssh') {
-          steps {
-            bat 'ssh -V'
-          }
-        }
 
         stage('Test SSH') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-user', keyFileVariable: 'KEY')]) {
                     bat '''
                         type %KEY%
-                        ssh -i %KEY% -o StrictHostKeyChecking=no ec2-user@18.141.24.7 "echo Connected!"
+                        "C:\\Windows\\System32\\OpenSSH\\ssh.exe" -i %KEY% -o StrictHostKeyChecking=no ec2-user@18.141.24.7 "echo Connected!"
                     '''
                }
             }
@@ -73,6 +68,7 @@ pipeline {
         }
     }
 }
+
 
 
 
