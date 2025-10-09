@@ -45,6 +45,12 @@ pipeline {
                 '''
             }
         }
+        stage('Check ssh') {
+          steps {
+            bat 'ssh -V'
+          }
+        }
+
         stage('Test SSH') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-user', keyFileVariable: 'KEY')]) {
@@ -67,6 +73,7 @@ pipeline {
         }
     }
 }
+
 
 
 
