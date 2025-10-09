@@ -45,16 +45,10 @@ pipeline {
                 '''
             }
         }
-        stage('Verify SSH') {
-            steps {
-                bat 'where ssh'
-                bat 'ssh -V'
-            }
-        }
         stage('Test SSH') {
             steps {
                 sshagent(credentials: ['ec2-user']) {
-                    bat 'ssh ec2-user@18.141.24.7 "echo Connected!"'
+                    bat '"C:\\WINDOWS\\System32\\OpenSSH\\ssh.exe" ec2-user@18.141.24.7 "echo Connected!"'
                 }
             }
         }
@@ -70,6 +64,7 @@ pipeline {
         }
     }
 }
+
 
 
 
