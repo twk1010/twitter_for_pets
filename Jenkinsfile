@@ -47,7 +47,7 @@ pipeline {
         }
         stage('Test SSH') {
             steps {
-                sshagent(['ec2-user']) {
+                sshagent(['5d7e18e5-350c-43b4-84b9-3300167fba12']) {
                     sh 'ssh -o StrictHostKeyChecking=no ec2-user@18.141.24.7 "echo hello"'
                }
             }
@@ -64,6 +64,7 @@ pipeline {
         }
     }
 }
+
 
 
 
