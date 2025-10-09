@@ -47,9 +47,10 @@ pipeline {
         }
         stage('Test SSH') {
             steps {
-                sshagent(credentials: ['ec2-user']) {
-                    bat '''
-                    ssh -o StrictHostKeyChecking=no ec2-user@18.141.24.7 "echo hello"
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-user', keyFileVariable: 'KEY')]) {
+                    sh '''
+                        chmod 600 $KEY
+                        ssh -i $KEY -o StrictHostKeyChecking=no ec2-user@18.141.24.7 "echo Connected!"
                     '''
                }
             }
@@ -66,6 +67,7 @@ pipeline {
         }
     }
 }
+
 
 
 
