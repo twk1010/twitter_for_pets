@@ -48,9 +48,9 @@ pipeline {
         stage('Test SSH') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-user', keyFileVariable: 'KEY')]) {
-                    sh '''
-                        chmod 600 $KEY
-                        ssh -i $KEY -o StrictHostKeyChecking=no ec2-user@18.141.24.7 "echo Connected!"
+                    bat '''
+                        type %KEY%
+                        ssh -i %KEY% -o StrictHostKeyChecking=no ec2-user@18.141.24.7 "echo Connected!"
                     '''
                }
             }
@@ -67,6 +67,7 @@ pipeline {
         }
     }
 }
+
 
 
 
