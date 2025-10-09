@@ -49,7 +49,7 @@ pipeline {
             steps {
                 withEnv(['PATH=C:\\Windows\\System32\\OpenSSH;' + env.PATH]) {
                     sshagent(['ec2-user']) {
-                        bat '"C:\\WINDOWS\\System32\\OpenSSH\\ssh.exe" ec2-user@18.141.24.7 "echo Connected!"'
+                        bat 'ssh -o StrictHostKeyChecking=no ec2-user@18.141.24.7 "echo Connected!"'
                     }
                 }
             }
@@ -66,6 +66,7 @@ pipeline {
         }
     }
 }
+
 
 
 
