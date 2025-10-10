@@ -45,13 +45,7 @@ pipeline {
                 '''
             }
         }
-        stage('Test SSH') {
-            steps {
-                sshagent(['ec2-user']) {
-                    bat 'ssh -o StrictHostKeyChecking=no ec2-user@13.229.116.91 "echo Connected!"'
-                }
-            }
-        }
+        
         stage('Deploy') {
             steps {
                 sshagent(['ec2-user']) { // Jenkins SSH credential ID
@@ -61,7 +55,35 @@ pipeline {
         
                     REM Run remote restart on EC2
                     ssh -o StrictHostKeyChecking=no ec2-user@13.229.116.91 ^
-                    bash -c "'cd ~/twitter_for_pets && pkill -f twitter_for_pets.py || true && nohup python3 twitter_for_pets.py > app.log 2>&1 & echo Deployment complete'"
+                    "bash -lc '
+                        set -e  # stop if any command fails
+        
+                        echo \"Deploying Twitter app...\"
+        
+                        # Go to deployment directory
+                        mkdir -p ~/twitter_for_pets
+                        cd ~/twitter_for_pets
+        
+                        # Stop old app if running (ignore errors)
+                        pkill -f twitter_for_pets.py || true
+        
+                        # Setup virtual environment if not exists
+                        if [ ! -d venv ]; then
+                            python3 -m venv venv
+                        fi
+        
+                        # Activate venv
+                        source venv/bin/activate
+        
+                        # Install dependencies
+                        pip install --upgrade pip
+                        pip install -r requirements.txt
+        
+                        # Start the app in background and redirect logs
+                        nohup python3 twitter_for_pets.py > app.log 2>&1 &
+        
+                        echo \"Deployment complete. Logs at ~/twitter_for_pets/app.log\"
+                    '"
                     '''
                 }
             }
@@ -78,6 +100,7 @@ pipeline {
         }
     }
 }
+
 
 
 
