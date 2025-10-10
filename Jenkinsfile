@@ -56,32 +56,16 @@ pipeline {
             steps {
                 sshagent(['ec2-user']) { // Jenkins SSH credential ID
                     bat '''
-                    ssh -o StrictHostKeyChecking=no ec2-user@13.229.116.91 "bash -c
-
-                    # Set deployment directory
-                    'DEPLOY_DIR=~/twitter_for_pets;
-                    mkdir -p $DEPLOY_DIR;
-                    cd $DEPLOY_DIR;
-
-                    # Stop old server if running (don't fail if not running)
-                    pkill -f twitter_for_pets.py || true;
-
-                    # Copy updated files from Jenkins workspace
-                    scp -o StrictHostKeyChecking=no USER@JENKINS_SERVER_IP:/path/to/workspace/twitter_for_pets.py .;
-                    scp -o StrictHostKeyChecking=no USER@JENKINS_SERVER_IP:/path/to/workspace/requirements.txt .;
-
-                    # Setup Python virtual environment
-                    if [ ! -d "venv" ]; then 
-                        python3 -m venv venv;
-                    fi;
-
-                    # Activate venv and install requirements
-                    source venv/bin/activate;
-                    pip install --upgrade pip;
-                    pip install -r requirements.txt;
-
-                    # Run the server in the background
-                    nohup python twitter_for_pets.py > twitter_for_pets.log 2>&1 &'
+                        REM Copy files to EC2
+                        scp -o StrictHostKeyChecking=no -r * ec2-user@13.229.116.91:~/twitter_for_pets
+            
+                        REM Run remote restart
+                        ssh -o StrictHostKeyChecking=no ec2-user@13.229.116.91 "bash -c '
+                            cd ~/twitter_for_pets;
+                            pkill -f twitter_for_pets.py || true;
+                            nohup python3 twitter_for_pets.py > app.log 2>&1 &
+                            echo Deployment complete
+                        '"
                     '''
                 }
             }
@@ -98,6 +82,7 @@ pipeline {
         }
     }
 }
+
 
 
 
