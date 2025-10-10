@@ -49,7 +49,6 @@ pipeline {
             steps {
                 sshagent(['ec2-user']) {
                     bat 'ssh -o StrictHostKeyChecking=no ec2-user@13.229.116.91 "echo Connected!"'
-                    }
                 }
             }
         }
@@ -65,6 +64,7 @@ pipeline {
         }
     }
 }
+
 
 
 
