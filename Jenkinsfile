@@ -50,9 +50,6 @@ pipeline {
             steps {
                 sshagent(['ec2-user']) { // Jenkins SSH credential ID
                     bat '''
-                    REM Copy all files to EC2 instance
-                    scp -o StrictHostKeyChecking=no -r * ec2-user@13.229.116.91:~/twitter_for_pets
-        
                     REM Run script on EC2
                     ssh -o StrictHostKeyChecking=no ec2-user@13.229.116.91 "bash ~/twitter_for_pets/deploy.sh"
                     '''
@@ -71,6 +68,7 @@ pipeline {
         }
     }
 }
+
 
 
 
