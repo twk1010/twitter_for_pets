@@ -56,16 +56,11 @@ pipeline {
             steps {
                 sshagent(['ec2-user']) { // Jenkins SSH credential ID
                     bat '''
-                        REM Copy files to EC2
-                        scp -o StrictHostKeyChecking=no -r * ec2-user@13.229.116.91:~/twitter_for_pets
-            
-                        REM Run remote restart
-                        ssh -o StrictHostKeyChecking=no ec2-user@13.229.116.91 "bash -c '
-                            cd ~/twitter_for_pets;
-                            pkill -f twitter_for_pets.py || true;
-                            nohup python3 twitter_for_pets.py > app.log 2>&1 &
-                            echo Deployment complete
-                        '"
+                    REM Copy all files to EC2 instance
+                    scp -o StrictHostKeyChecking=no -r * ec2-user@13.229.116.91:~/twitter_for_pets
+        
+                    REM Run remote restart on EC2
+                    ssh -o StrictHostKeyChecking=no ec2-user@13.229.116.91 "bash -c \\"cd ~/twitter_for_pets && pkill -f twitter_for_pets.py || true && nohup python3 twitter_for_pets.py > app.log 2>&1 & echo Deployment complete\\""
                     '''
                 }
             }
@@ -82,6 +77,7 @@ pipeline {
         }
     }
 }
+
 
 
 
